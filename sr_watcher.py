@@ -40,7 +40,6 @@ USE_TRUE_FULLSCREEN = False
 COLOR_ARM_FLASH = (120, 220, 120)
 COLOR_MATCH_FLASH = (120, 220, 220)
 
-# Very noticeable live counter overlay
 COUNTER_BG_COLOR = (0, 0, 0)
 COUNTER_TEXT_COLOR = (255, 255, 255)
 COUNTER_BORDER_COLOR = (255, 255, 255)
@@ -271,7 +270,6 @@ def main():
 
     setup_window(actual_w, actual_h)
 
-    last_detection_time = 0.0
     last_esc_state = False
 
     armed = False
@@ -320,17 +318,14 @@ def main():
                 match_streak = 0
                 waiting_for_leave = False
 
-            now = time.time()
             if (
                 is_match
                 and not waiting_for_leave
                 and match_streak >= MATCH_CONFIRM_FRAMES
-                and (now - last_detection_time) >= DETECTION_COOLDOWN_SECONDS
             ):
                 live_total, log_file = write_increment_to_log()
-                last_detection_time = now
                 waiting_for_leave = True
-                match_flash_until = now + MATCH_FLASH_DURATION_SECONDS
+                match_flash_until = time.time() + MATCH_FLASH_DURATION_SECONDS
                 print(f"Reset detected -> +1 (Total {live_total})")
                 print(f"Logged to {log_file}")
 
