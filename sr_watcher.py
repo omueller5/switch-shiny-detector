@@ -8,6 +8,7 @@
 # - debug mode added (off by default)
 
 import cv2
+import sys
 import subprocess
 import time
 from datetime import datetime
@@ -39,6 +40,13 @@ debug_enabled_var = None
 cooldown_var = None
 
 options_button_rect = None
+
+
+def resource_path(relative_path: str) -> str:
+    if hasattr(sys, "_MEIPASS"):
+        return str(Path(sys._MEIPASS) / relative_path)
+    return str(Path(__file__).resolve().parent / relative_path)
+
 
 
 def launch_obs():
@@ -80,7 +88,8 @@ def find_text_bbox(gray):
 
 
 def load_template():
-    img = cv2.imread(TEMPLATE_FILE)
+    template_path = resource_path(TEMPLATE_FILE)
+    img = cv2.imread(template_path)
     if img is None:
         raise RuntimeError(f"Missing or unreadable template image: {TEMPLATE_FILE}")
 
